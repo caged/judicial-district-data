@@ -13,11 +13,11 @@ CREATE TABLE intersections_with_threshold AS (
     n.district_n
  , CASE
    WHEN ST_CoveredBy(p.shape, n.geom)
-   THEN p.shape
+   THEN ST_SetSRID(p.shape, 4269)
    ELSE
-    ST_Multi(
+    ST_SetSRID(ST_Multi(
       ST_Intersection(p.shape,n.geom)
-      ) END AS geom
+      ), 4269) END AS geom
  FROM acs_2017_5yr_county AS p
    INNER JOIN us_district_court_fixed AS n
     ON (ST_Intersects(p.shape, n.geom)
