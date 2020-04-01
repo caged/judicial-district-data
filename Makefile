@@ -1,17 +1,9 @@
 .SECONDARY:
 
-# Really just a fancy way to conver to geopackage, a modern,
-# open format built on top of sqlite.  We don't have to do this.
-data/gpkg/%.gpkg:
+data/gdb/%.gdb:
 	rm -rf $(basename $@)
 	mkdir -p $(basename $@)
 	tar --exclude="._*" -xzm -C $(basename $@) -f $<
-
-	for file in `find $(basename $@) -name '*.gdb'`; do \
-		ogr2ogr -nlt PROMOTE_TO_MULTI -f GPKG -t_srs EPSG:4326 $(basename $@).gpkg $$file; \
-		chmod 644 $(basename $@).gpkg; \
-	done
-	rm -rf $(basename $@)
 
 # Dataset provided by Homeland Infrastructure Foundation-Level Data site.
 # See https://hifld-geoplatform.opendata.arcgis.com/datasets/us-district-court-jurisdictions
@@ -25,5 +17,5 @@ data/gz/acs_2017_5yr_county.zip:
 	curl -L "https://www2.census.gov/geo/tiger/TIGER_DP/2017ACS/ACS_2017_5YR_COUNTY.gdb.zip" -o $@.download
 	mv $@.download $@
 
-data/gpkg/judicial-districts.gpkg: data/gz/us-district-court-jurisdictions.zip
-
+data/gdb/judicial_districts.gdb: data/gz/us-district-court-jurisdictions.zip
+data/gdb/acs_2017_5yr_county.gdb: data/gz/acs_2017_5yr_county.zip
