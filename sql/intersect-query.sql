@@ -1,4 +1,16 @@
-CREATE TABLE intersections_with_threshold AS (SELECT p.geoid, p.namelsad, n.fid, n.abbr, n.district, n.district_n
+DROP TABLE IF EXISTS intersections_with_threshold;
+
+CREATE TABLE intersections_with_threshold AS (
+  SELECT
+    p.geoid,
+    p.name,
+    p.namelsad,
+    p.countyfp,
+    p.statefp,
+    n.fid,
+    n.abbr,
+    n.district,
+    n.district_n
  , CASE
    WHEN ST_CoveredBy(p.shape, n.geom)
    THEN p.shape
