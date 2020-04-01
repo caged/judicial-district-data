@@ -1,6 +1,6 @@
 WITH
-bad_geometries as (SELECT
-  (a.p_geom).path[1] as path,
+bad_geometries AS (SELECT
+  (a.p_geom).path[1] AS path,
   (a.p_geom).geom
 FROM
   (
@@ -11,16 +11,16 @@ FROM
     WHERE
       fid = 57
   ) a),
-good_geometries as (
-  SELECT shape as geom
+good_geometries AS (
+  SELECT shape AS geom
   FROM us_district_court_jurisdictions
-  where
+  WHERE
   fid = 58
 ),
-movable_polygon as (select * from bad_geometries where path = 1),
-retained_polygon as (select * from bad_geometries where path = 2)
+movable_polygon AS (SELECT * FROM bad_geometries WHERE path = 1),
+retained_polygon AS (SELECT * FROM bad_geometries WHERE path = 2)
 
-update us_district_court_jurisdictions set shape = CASE
+UPDATE us_district_court_jurisdictions set shape = CASE
     WHEN fid = 58 THEN st_multi(st_union(shape, m.geom))
     WHEN fid = 57 THEN st_multi(r.geom)
   END
