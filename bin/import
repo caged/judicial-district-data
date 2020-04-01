@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# Usage:
+# bin/import $DBNAME $DATASET.gdb
+
+set -e
+
+usage() { echo "Usage: $0 [-d postgres database] [-g gdb dataset]" 1>&2; exit 1; }
+
+while getopts ":d:g:" opt; do
+  case $opt in
+    d)
+      dbname=$OPTARG
+      ;;
+    g)
+      dataset=$OPTARG
+      ;;
+    *)
+      usage
+      ;;
+  esac
+done
+
+shift $((OPTIND-1))
+
+if [ -z "${dbname}" ] || [ -z "${dataset}" ]; then
+  usage
+fi
+
+
+# We don't load all ACS because some tables have over 1600 columns, Postgres' limit
+# ACS also uses 4269 projection, so just reproject other files to that
+ogr2ogr \
+    -skipfailures \
+    -t_srs 'EPSG:4269' \
+    -f "PostgreSQL" \
+    PG:"host=localhost port=5432 dbname=$dbname" \
+    "$dataset" \
+    -overwrite -progress --config PG_USE_COPY YES
