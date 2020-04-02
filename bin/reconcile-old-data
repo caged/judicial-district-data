@@ -1,0 +1,60 @@
+#!/usr/bin/env node
+
+const fs = require('fs')
+const d3 = require('d3')
+
+const topo = JSON.parse(fs.readFileSync('./data/json/counties-albers-10m.json'))
+const counties = d3.csvParse(fs.readFileSync('./data/csv/fedstat-counties.csv', 'utf-8'))
+const courts = d3.csvParse(fs.readFileSync('./data/csv/fedstat-courts.csv', 'utf-8'))
+const appeals = d3.csvParse(fs.readFileSync('./data/csv/hifld-courts.csv', 'utf-8'))
+
+// Counties missing in the old fedstat data.
+// These were manually reconciled with the data provided by the
+// The Homeland Infrastructure Foundation-Level Data (HIFLD) Subcommittee
+// website
+const missing = new Map([
+  ['02275', { name: 'Wrangell', district: 'Alaska', dabbr: 'AK', appeals: '9' }],
+  ['02158', { name: 'Kusilvak', district: 'Alaska', dabbr: 'AK', appeals: '9' }],
+  ['02105', { name: 'Hoonah-Angoon', district: 'Alaska', dabbr: 'AK', appeals: '9' }],
+  ['02195', { name: 'Petersburg', district: 'Alaska', dabbr: 'AK', appeals: '9' }],
+  ['02198', { name: 'Prince of Wales-Hyder', district: 'Alaska', dabbr: 'AK', appeals: '9' }],
+  ['02230', { name: 'Skagway', district: 'Alaska', dabbr: 'AK', appeals: '9' }],
+  ['46102', { name: 'Oglala Lakota', district: 'South Dakota', dabbr: 'SD', appeals: '8' }]
+])
+
+function getCountyInfo(id) {
+  return counties.find(c => c.id === id)
+}
+
+function getCourtInfo(id) {
+  return courts.find(c => c.id === id)
+}
+
+function getAppealsInfo(name) {
+  return appeals.find(a => a.district.toLowerCase() === name.toLowerCase())
+}
+
+function reconcileDataForCounty(id, properties) {
+  let data = { ...properties }
+  const county = getCountyInfo(id)
+
+  if (county) {
+    const court = getCourtInfo(county.court)
+    const appeals = getAppealsInfo(court.name)
+    data.district = court.name
+    data.dabbr = appeals.abbr
+    data.appeals = appeals.district_n
+  } else {
+    data = missing.get(id)
+  }
+
+  return data
+}
+
+for (let county of topo.objects.counties.geometries) {
+  const { id, properties } = county
+  const data = reconcileDataForCounty(id, properties)
+  county.properties = { ...properties, ...data }
+}
+
+fs.writeFileSync('out.json', JSON.stringify(topo))
