@@ -1,0 +1,20 @@
+{
+  "name": "judicial-district-data",
+  "version": "0.0.1",
+  "description": "judicial county data",
+  "main": "index.js",
+  "repository": "git@github.com:caged/judicial-district-data.git",
+  "author": "Justin Palmer <encytemedia@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "topo": "./bin/topology"
+  },
+  "dependencies": {
+    "d3": "^5.15.1",
+    "d3-geo-projection": "^2.8.1",
+    "ndjson-cli": "^0.3.1",
+    "topojson-client": "^3.1.0",
+    "topojson-server": "^3.0.1",
+    "topojson-simplify": "^3.0.3"
+  }
+}

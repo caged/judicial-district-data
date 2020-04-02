@@ -31,6 +31,6 @@ if [ -z "${dbname}" ] || [ -z "${table}" ] || [ -z "${out}" ]; then
 fi
 
 ogr2ogr \
-    -f "GeoJSON" $out \
+    -f "GeoJSONSeq" $out \
     PG:"host=localhost port=5432 dbname=$dbname" \
-    -sql "SELECT * from $table limit 100"
+    -sql "SELECT * from $table"

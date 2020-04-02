@@ -1,3 +1,5 @@
+all: data/gdb/judicial_districts.gdb data/gdb/acs_2017_5yr_county.gdb
+
 .SECONDARY:
 
 data/gdb/%.gdb:

@@ -1,0 +1,1 @@
+COPY us_district_court_jurisdictions(fid, abbr, district, district_n) TO STDOUT DELIMITER ',' CSV HEADER;
