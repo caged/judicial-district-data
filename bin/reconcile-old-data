@@ -57,4 +57,6 @@ for (let county of topo.objects.counties.geometries) {
   county.properties = { ...properties, ...data }
 }
 
-fs.writeFileSync('out.json', JSON.stringify(topo))
+const out = 'data/json/reconciled.json'
+console.log(`Writing reconciled topojsondata to ${out}`);
+fs.writeFileSync(out, JSON.stringify(topo))
