@@ -1,3 +1,7 @@
+This is a set of god awful hacks to generate county-level data for judicial districts.
+
+### Old fragile stuff below
+
 ```shell
 # Install system dependencies
 brew install gdal postgis
