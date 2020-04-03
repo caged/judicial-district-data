@@ -1,4 +1,6 @@
-This is a set of god awful hacks to generate county-level data for judicial districts.
+[](./preview.png)
+
+This is a set of god awful hacks to generate county-level data for judicial districts. See [this observable notebook](https://observablehq.com/@caged/the-united-states-courts-of-appeals-and-district-courts) for an interactive version.
 
 ### Old fragile stuff below
 
